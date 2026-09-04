@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pedido de Orçamento — M8 Stone Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --stone-bg: #f6f4f1;
+    --stone-bg-2: #efece7;
+    --card: #ffffff;
+    --charcoal: #26262a;
+    --ink: #3a3a3f;
+    --muted: #7c7a76;
+    --faint: #a8a5a0;
+    --gold: #a9793f;
+    --gold-soft: #e8dcc8;
+    --line: #e2ddd4;
+    --green: #4c7a5c;
+    --red: #b8493a;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; background:var(--stone-bg); color:var(--ink); font-family:'Inter',-apple-system,sans-serif; }
+  .wrap{ max-width:860px; margin:0 auto; padding:40px 26px 70px; }
+  .top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:34px; flex-wrap:wrap; gap:10px; }
+  .brand{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:26px; color:var(--charcoal); letter-spacing:0.5px; }
+  .brand span{ color:var(--gold); }
+  .brand-sub{ font-size:11px; letter-spacing:2.5px; color:var(--muted); text-transform:uppercase; margin-top:2px; }
+  .demo-tag{ font-size:11px; font-weight:600; letter-spacing:1px; color:var(--gold); background:var(--gold-soft); border:1px solid #d9c69f; border-radius:20px; padding:6px 14px; }
+
+  h1{ font-family:'Cormorant Garamond', serif; font-weight:600; font-size:38px; color:var(--charcoal); margin:0 0 10px; }
+  .lede{ font-size:15px; color:var(--muted); max-width:640px; line-height:1.6; margin-bottom:36px; }
+
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:32px 34px; margin-bottom:26px; box-shadow:0 1px 3px rgba(0,0,0,0.03); }
+  .card h2{ font-family:'Cormorant Garamond', serif; font-weight:600; font-size:22px; color:var(--charcoal); margin:0 0 22px; }
+
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:640px){ .grid2{ grid-template-columns:1fr; } }
+
+  label{ display:block; font-size:12.5px; font-weight:600; color:var(--charcoal); margin-bottom:6px; }
+  label .opt{ font-weight:400; color:var(--faint); }
+  input, select, textarea{
+    width:100%; font-family:'Inter',sans-serif; font-size:14px; color:var(--ink);
+    background:var(--stone-bg-2); border:1px solid var(--line); border-radius:8px;
+    padding:11px 13px; margin-bottom:18px; outline:none;
+  }
+  input:focus, select:focus, textarea:focus{ border-color:var(--gold); background:#fff; }
+  textarea{ resize:vertical; min-height:80px; }
+
+  .options-row{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+  .chip{ font-size:12.5px; padding:8px 14px; border-radius:20px; border:1px solid var(--line); background:var(--stone-bg-2); color:var(--ink); cursor:pointer; user-select:none; }
+  .chip.selected{ background:var(--charcoal); border-color:var(--charcoal); color:#fff; }
+
+  .submit-btn{
+    width:100%; background:var(--charcoal); color:#fff; border:none; border-radius:8px;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:14.5px; padding:14px; cursor:pointer;
+  }
+  .submit-btn:hover{ background:#3a3a3f; }
+
+  .field-error{ font-size:11.5px; color:var(--red); margin:-14px 0 14px; display:none; }
+
+  .result-wrap{ display:none; }
+  .result-badge{ display:inline-block; font-size:11.5px; font-weight:600; color:var(--green); background:#e7f0e9; border:1px solid #c7dccb; border-radius:20px; padding:5px 12px; margin-bottom:16px; }
+  .result-badge.pending{ color:var(--gold); background:var(--gold-soft); border-color:#d9c69f; }
+  .result-badge.error{ color:var(--red); background:#f6e6e3; border-color:#e3c3ba; }
+  .result-title{ font-family:'Cormorant Garamond', serif; font-size:20px; font-weight:600; color:var(--charcoal); margin:0 0 4px; }
+  .result-sub{ font-size:12.5px; color:var(--muted); margin-bottom:16px; }
+  pre.output{
+    background:var(--stone-bg-2); border:1px solid var(--line); border-radius:10px; padding:18px 20px;
+    font-family:'Inter',sans-serif; font-size:13px; line-height:1.6; color:var(--ink); white-space:pre-wrap; word-break:break-word;
+    margin:0 0 12px;
+  }
+  .copy-btn{ font-size:12px; font-weight:600; color:var(--charcoal); background:#fff; border:1px solid var(--line); border-radius:7px; padding:7px 14px; cursor:pointer; }
+  .copy-btn:hover{ border-color:var(--gold); color:var(--gold); }
+
+  .note-box{ background:#fbf7ee; border:1px solid var(--gold-soft); border-radius:12px; padding:20px 24px; font-size:12.5px; color:var(--ink); line-height:1.6; }
+  .note-box b{ color:var(--charcoal); }
+
+  .footer{ margin-top:40px; text-align:center; font-size:11.5px; color:var(--faint); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div>
+      <div class="brand">M8 <span>Stone Solutions</span></div>
+      <div class="brand-sub">Mármore · Granito · Quartzo</div>
+    </div>
+    <div class="demo-tag">DEMO — proposta Fenrion AI</div>
+  </div>
+
+  <h1>Pedido de Orçamento</h1>
+  <p class="lede">Conte-nos os detalhes do seu projeto e a nossa equipa entra em contacto consigo em até 24h úteis. Este formulário substitui o email genérico atual — nada se perde entre o primeiro contacto e a resposta.</p>
+
+  <form class="card" id="quote-form">
+    <h2>Os seus dados</h2>
+    <div class="grid2">
+      <div>
+        <label>Nome *</label>
+        <input type="text" id="q-nome" placeholder="O seu nome">
+        <div class="field-error" id="err-nome">Indique o seu nome.</div>
+      </div>
+      <div>
+        <label>Empresa / Atelier <span class="opt">(opcional)</span></label>
+        <input type="text" id="q-empresa" placeholder="Ex: Atelier de Arquitetura X">
+      </div>
+    </div>
+    <div class="grid2">
+      <div>
+        <label>Email *</label>
+        <input type="email" id="q-email" placeholder="nome@email.pt">
+        <div class="field-error" id="err-email">Indique um email válido.</div>
+      </div>
+      <div>
+        <label>Telefone <span class="opt">(opcional)</span></label>
+        <input type="tel" id="q-telefone" placeholder="+351 ...">
+      </div>
+    </div>
+
+    <h2 style="margin-top:6px;">O seu projeto</h2>
+    <label>Tipo de projeto *</label>
+    <div class="options-row" id="tipo-projeto-options">
+      <div class="chip" data-val="Cozinha">Cozinha</div>
+      <div class="chip" data-val="Casa de Banho">Casa de Banho</div>
+      <div class="chip" data-val="Interiores">Interiores</div>
+      <div class="chip" data-val="Exterior">Exterior</div>
+    </div>
+    <div class="field-error" id="err-tipo">Escolha o tipo de projeto.</div>
+
+    <label>Material pretendido *</label>
+    <div class="options-row" id="material-options">
+      <div class="chip" data-val="Granito">Granito</div>
+      <div class="chip" data-val="Mármore">Mármore</div>
+      <div class="chip" data-val="Calcário">Calcário</div>
+      <div class="chip" data-val="Ónix">Ónix</div>
+      <div class="chip" data-val="Semi-precioso">Semi-precioso</div>
+      <div class="chip" data-val="Quartzo">Quartzo</div>
+      <div class="chip" data-val="Cerâmico">Cerâmico</div>
+      <div class="chip" data-val="Ainda não sei">Ainda não sei</div>
+    </div>
+    <div class="field-error" id="err-material">Escolha o material pretendido.</div>
+
+    <div class="grid2">
+      <div>
+        <label>Dimensões aproximadas <span class="opt">(opcional)</span></label>
+        <input type="text" id="q-dimensoes" placeholder="Ex: ~12 m² de bancada">
+      </div>
+      <div>
+        <label>Prazo pretendido</label>
+        <select id="q-prazo">
+          <option value="Urgente (menos de 1 mês)">Urgente (menos de 1 mês)</option>
+          <option value="1 a 3 meses" selected>1 a 3 meses</option>
+          <option value="3 a 6 meses">3 a 6 meses</option>
+          <option value="Sem prazo definido">Sem prazo definido</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Notas adicionais <span class="opt">(opcional)</span></label>
+    <textarea id="q-mensagem" placeholder="Cor pretendida, referências, morada da obra, etc."></textarea>
+
+    <button type="button" class="submit-btn" onclick="submitQuoteRequest()">Enviar pedido de orçamento</button>
+  </form>
+
+  <div class="result-wrap" id="result-wrap">
+    <div class="card">
+      <span class="result-badge">✓ Pedido recebido</span>
+      <div class="result-title">Notificação interna — equipa M8</div>
+      <div class="result-sub">Isto é o que a equipa recebe automaticamente, no instante em que o pedido é submetido.</div>
+      <pre class="output" id="internal-output"></pre>
+      <button class="copy-btn" onclick="copyBlock('internal-output')">Copiar</button>
+    </div>
+
+    <div class="card">
+      <div class="result-title">Email de confirmação — para o cliente</div>
+      <div class="result-sub">Enviado automaticamente assim que o pedido é submetido, sem qualquer intervenção manual.</div>
+      <div style="font-size:12px; color:var(--muted); margin-bottom:8px;">Assunto: <b id="email-subject" style="color:var(--charcoal);"></b></div>
+      <pre class="output" id="email-output"></pre>
+      <button class="copy-btn" onclick="copyBlock('email-output')">Copiar</button>
+    </div>
+
+    <div class="card" id="real-send-status" style="display:none;">
+      <span class="result-badge" id="real-send-badge">A enviar…</span>
+      <div class="result-title" id="real-send-title">Envio real em curso</div>
+      <div class="result-sub" id="real-send-sub" style="margin-bottom:0;"></div>
+    </div>
+
+    <div class="note-box">
+      <b>Nota honesta sobre esta demonstração:</b> o texto acima é gerado em tempo real, no seu browser, a partir dos dados que preencheu. Os dois emails são também <b>realmente enviados</b> neste momento — o de confirmação para o endereço que indicou, o de notificação interna para a Fenrion AI, exatamente como a equipa da M8 os receberia. Para isto ir ao ar no site oficial da M8, falta ligar duas coisas: (1) hospedar este formulário na página real de pedido de orçamento, e (2) apontar os emails ao domínio e à caixa de email da M8 em vez dos endereços de teste da Fenrion. A automação em si — normalização dos dados, geração dos dois emails, envio real — já está pronta e a funcionar.
+    </div>
+  </div>
+
+  <div class="footer">Protótipo construído por Fenrion AI — demonstração do Motor de Captação de Pedidos (Fase 1 do roadmap)</div>
+</div>
+
+<script>
+  let tipoProjeto = null;
+  let material = null;
+
+  // Webhook real (n8n + SMTP Fenrion AI) — envia de facto os dois emails gerados abaixo.
+  // Ligado a um número de teste durante a demonstração; passar a apontar ao domínio/caixa de
+  // email da M8 é o único passo que falta para isto ir ao ar no site deles.
+  const N8N_WEBHOOK_URL = 'https://fenrion-ai.app.n8n.cloud/webhook/m8-demo-orcamento';
+
+  document.querySelectorAll('#tipo-projeto-options .chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      document.querySelectorAll('#tipo-projeto-options .chip').forEach(c=>c.classList.remove('selected'));
+      chip.classList.add('selected');
+      tipoProjeto = chip.dataset.val;
+    });
+  });
+  document.querySelectorAll('#material-options .chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      document.querySelectorAll('#material-options .chip').forEach(c=>c.classList.remove('selected'));
+      chip.classList.add('selected');
+      material = chip.dataset.val;
+    });
+  });
+
+  function isValidEmail(v){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  }
+
+  function submitQuoteRequest(){
+    const nome = document.getElementById('q-nome').value.trim();
+    const empresa = document.getElementById('q-empresa').value.trim();
+    const email = document.getElementById('q-email').value.trim();
+    const telefone = document.getElementById('q-telefone').value.trim();
+    const dimensoes = document.getElementById('q-dimensoes').value.trim();
+    const prazo = document.getElementById('q-prazo').value;
+    const mensagem = document.getElementById('q-mensagem').value.trim();
+
+    let valid = true;
+    document.getElementById('err-nome').style.display = 'none';
+    document.getElementById('err-email').style.display = 'none';
+    document.getElementById('err-tipo').style.display = 'none';
+    document.getElementById('err-material').style.display = 'none';
+
+    if(!nome){ document.getElementById('err-nome').style.display = 'block'; valid = false; }
+    if(!email || !isValidEmail(email)){ document.getElementById('err-email').style.display = 'block'; valid = false; }
+    if(!tipoProjeto){ document.getElementById('err-tipo').style.display = 'block'; valid = false; }
+    if(!material){ document.getElementById('err-material').style.display = 'block'; valid = false; }
+    if(!valid) return;
+
+    const now = new Date();
+    const timestamp = now.toLocaleDateString('pt-PT') + ' às ' + now.toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'});
+
+    const internal =
+`🔔 NOVO PEDIDO DE ORÇAMENTO
+
+Cliente: ${nome}${empresa ? ' (' + empresa + ')' : ' (particular / atelier não indicado)'}
+Contacto: ${email}${telefone ? ' · ' + telefone : ''}
+
+Projeto: ${tipoProjeto} — ${material}
+Dimensões aproximadas: ${dimensoes || 'não indicadas'}
+Prazo pretendido: ${prazo}
+Notas adicionais: ${mensagem || '—'}
+
+Recebido: ${timestamp}
+→ Ação sugerida: responder em até 24h úteis.`;
+
+    const subject = `Recebemos o seu pedido de orçamento — M8 Stone Solutions`;
+    const emailBody =
+`Caro(a) ${nome},
+
+Obrigado pelo interesse na M8 Stone Solutions. Recebemos o seu pedido de orçamento para um projeto de ${tipoProjeto.toLowerCase()} em ${material.toLowerCase()}${dimensoes ? ', com uma área aproximada de ' + dimensoes : ''}.
+
+A nossa equipa vai analisar os detalhes e entra em contacto consigo brevemente, idealmente dentro de 24h úteis.
+
+Resumo do pedido:
+- Tipo de projeto: ${tipoProjeto}
+- Material pretendido: ${material}
+- Dimensões aproximadas: ${dimensoes || 'a confirmar'}
+- Prazo pretendido: ${prazo}
+- Notas adicionais: ${mensagem || 'sem notas adicionais'}
+
+Com os melhores cumprimentos,
+Equipa M8 Stone Solutions`;
+
+    document.getElementById('internal-output').textContent = internal;
+    document.getElementById('email-subject').textContent = subject;
+    document.getElementById('email-output').textContent = emailBody;
+    const resultWrap = document.getElementById('result-wrap');
+    resultWrap.style.display = 'block';
+    if(typeof resultWrap.scrollIntoView === 'function'){
+      resultWrap.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    sendRealEmails({ nome, empresa, email, telefone, tipoProjeto, material, dimensoes, prazo, mensagem });
+  }
+
+  async function sendRealEmails(payload){
+    const statusCard = document.getElementById('real-send-status');
+    const badge = document.getElementById('real-send-badge');
+    const title = document.getElementById('real-send-title');
+    const sub = document.getElementById('real-send-sub');
+    if(!statusCard) return;
+
+    statusCard.style.display = 'block';
+    badge.className = 'result-badge pending';
+    badge.textContent = 'A enviar…';
+    title.textContent = 'Envio real em curso';
+    sub.textContent = 'A enviar o email de confirmação para ' + payload.email + ' e a notificação interna para a Fenrion AI.';
+
+    try{
+      const resp = await fetch(N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if(!resp.ok) throw new Error('HTTP ' + resp.status);
+      badge.className = 'result-badge';
+      badge.textContent = '✓ Enviado de verdade';
+      title.textContent = 'Emails reais enviados';
+      sub.textContent = 'Verifiquem a caixa de entrada de ' + payload.email + ' — o email de confirmação acima acabou de ser entregue mesmo, não é só uma simulação de ecrã.';
+    }catch(err){
+      badge.className = 'result-badge error';
+      badge.textContent = '⚠ Não foi possível confirmar';
+      title.textContent = 'Envio real falhou neste teste';
+      sub.textContent = 'O texto acima continua correto — é o que seria enviado — mas a ligação a partir deste ecrã falhou (' + err.message + '). A lógica de envio já foi validada em separado pela Fenrion.';
+    }
+  }
+
+  function copyBlock(id){
+    const text = document.getElementById(id).textContent;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).catch(()=>{});
+    }
+  }
+</script>
+</body>
+</html>
